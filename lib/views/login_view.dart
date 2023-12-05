@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer';
+import 'dart:developer' as devtools show log;
+
+import 'package:mylistapp/constants/routes.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -35,7 +37,7 @@ class _LoginViewState extends State<LoginView> {
         backgroundColor: Colors.blue,
       ),
       body: Container(
-        padding: EdgeInsets.all(5),
+        padding: const EdgeInsets.all(5),
         child: Center(
           child: Container(
             padding: const EdgeInsets.all(25),
@@ -94,25 +96,26 @@ class _LoginViewState extends State<LoginView> {
                         final email = _email.text;
                         final password = _password.text;
                         try {
-                          final userCredentials = await FirebaseAuth.instance
+                          await FirebaseAuth.instance
                               .signInWithEmailAndPassword(
                                   email: email, password: password);
-                          print(userCredentials);
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                            dashboardRoute,
+                            (route) => false,
+                          );
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'user-not-found') {
-                            print("error");
-                            log("error");
+                            devtools.log("error");
                             if (e.code == 'user-not-found') {
-                              log("user not found");
-                              print("user not found");
+                              devtools.log("user not found");
                             } else if (e.code == 'invalid-email') {
-                              print("invalid email");
+                              devtools.log("invalid email");
                             } else if (e.code == 'wrong-password') {
-                              print("wrong password");
+                              devtools.log("wrong password");
                             } else if (e.code == 'weak-password') {
-                              print("weak password");
+                              devtools.log("weak password");
                             } else {
-                              print(e.code.toString());
+                              devtools.log(e.code.toString());
                             }
                           }
                         }
@@ -130,7 +133,7 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       onPressed: () {
                         Navigator.of(context).pushNamedAndRemoveUntil(
-                            '/register', (route) => false);
+                            registerRoute, (route) => false);
                       },
                       child: const Text(
                         'Register, if new user!',
