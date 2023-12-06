@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
 
-enum MenuAction { logout }
+import 'package:mylistapp/enums/menu_action.dart';
+import 'package:mylistapp/services/auth/auth_service.dart';
 
 class DashboardView extends StatefulWidget {
   const DashboardView({super.key});
@@ -24,7 +24,7 @@ class _DashboardViewState extends State<DashboardView> {
               case MenuAction.logout:
                 final shouldLogout = await showLogOutDialog(context);
                 if (shouldLogout) {
-                  await FirebaseAuth.instance.signOut();
+                  await AuthService.firebase().logout();
                   Navigator.of(context)
                       .pushNamedAndRemoveUntil('/login/', (_) => false);
                 }

@@ -1,13 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mylistapp/constants/routes.dart';
-import 'package:mylistapp/firebase_options.dart';
 import 'package:mylistapp/views/dashboard_view.dart';
 import 'package:mylistapp/views/login_view.dart';
 import 'package:mylistapp/views/register_view.dart';
 import 'package:mylistapp/views/verify_email_view.dart';
-import 'dart:developer' as devtools show log;
+import 'package:mylistapp/services/auth/auth_service.dart';
+// import 'dart:developer' as devtools show log;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +20,7 @@ void main() {
       loginRoute: (context) => const LoginView(),
       registerRoute: (context) => const RegisterView(),
       dashboardRoute: (context) => const DashboardView(),
+      verifyEmailRoute: (context) => const VerifyEmailView(),
     },
   ));
 }
@@ -32,14 +31,13 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform),
+      future: AuthService.firebase().initialize(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
-            final user = FirebaseAuth.instance.currentUser;
+            final user = AuthService.firebase().currentUser;
             if (user != null) {
-              if (user.emailVerified) {
+              if (user.isEmailVerified) {
                 return const DashboardView();
               } else {
                 return const VerifyEmailView();

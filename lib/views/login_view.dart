@@ -1,8 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
-
+// import 'dart:developer' as devtools show log;
 import 'package:mylistapp/constants/routes.dart';
+import 'package:mylistapp/services/auth/auth_exceptions.dart';
+import 'package:mylistapp/services/auth/auth_service.dart';
+import 'package:mylistapp/utilities/show_error_log.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -37,10 +41,10 @@ class _LoginViewState extends State<LoginView> {
         backgroundColor: Colors.blue,
       ),
       body: Container(
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(15),
         child: Center(
           child: Container(
-            padding: const EdgeInsets.all(25),
+            padding: const EdgeInsets.all(15),
             height: 200,
             decoration: const BoxDecoration(
               color: Colors.blue,
@@ -82,6 +86,9 @@ class _LoginViewState extends State<LoginView> {
                         const InputDecoration(hintText: 'Enter Password'),
                   ),
                 ),
+                const Spacer(
+                  flex: 15,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -89,35 +96,43 @@ class _LoginViewState extends State<LoginView> {
                     TextButton(
                       style: const ButtonStyle(
                         alignment: Alignment.center,
-                        elevation: MaterialStatePropertyAll(10),
                         backgroundColor: MaterialStatePropertyAll(Colors.black),
                       ),
                       onPressed: () async {
                         final email = _email.text;
                         final password = _password.text;
                         try {
-                          await FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
-                                  email: email, password: password);
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                            dashboardRoute,
-                            (route) => false,
+                          await AuthService.firebase().logIn(
+                            email: email,
+                            password: password,
                           );
-                        } on FirebaseAuthException catch (e) {
-                          if (e.code == 'user-not-found') {
-                            devtools.log("error");
-                            if (e.code == 'user-not-found') {
-                              devtools.log("user not found");
-                            } else if (e.code == 'invalid-email') {
-                              devtools.log("invalid email");
-                            } else if (e.code == 'wrong-password') {
-                              devtools.log("wrong password");
-                            } else if (e.code == 'weak-password') {
-                              devtools.log("weak password");
-                            } else {
-                              devtools.log(e.code.toString());
-                            }
+                          final user = AuthService.firebase().currentUser;
+                          if (user?.isEmailVerified ?? false) {
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                              dashboardRoute,
+                              (route) => false,
+                            );
+                          } else {
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                              verifyEmailRoute,
+                              (route) => false,
+                            );
                           }
+                        } on UserNotFoundAuthException {
+                          await showErrorDialog(
+                            context,
+                            'User not found',
+                          );
+                        } on WrongPasswordAuthException {
+                          await showErrorDialog(
+                            context,
+                            'Wrong Credentials',
+                          );
+                        } on GenericAuthException {
+                          await showErrorDialog(
+                            context,
+                            'Authentication Error',
+                          );
                         }
                       },
                       child: const Text(
