@@ -1,11 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:mylistapp/firebase_options.dart';
 import 'package:mylistapp/services/auth/auth_user.dart';
 import 'package:mylistapp/services/auth/auth_provider.dart';
 import 'package:mylistapp/services/auth/auth_exceptions.dart';
+import 'dart:developer' as devtools show log;
 
 import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException;
+// import 'package:mylistapp/utilities/show_error_log.dart';
 
 class FirebaseAuthProvider implements AuthProvider {
   @override
@@ -18,6 +21,7 @@ class FirebaseAuthProvider implements AuthProvider {
           .createUserWithEmailAndPassword(email: email, password: password);
       final user = currentUser;
       if (user != null) {
+        devtools.log(user.toString());
         return user;
       } else {
         throw UserNotLoggedInAuthException();
@@ -53,7 +57,7 @@ class FirebaseAuthProvider implements AuthProvider {
     required String password,
   }) async {
     try {
-      FirebaseAuth.instance
+      await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       final user = currentUser;
       if (user != null) {

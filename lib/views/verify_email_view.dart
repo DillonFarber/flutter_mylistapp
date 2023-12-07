@@ -26,7 +26,6 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
               "If you haven't received a verification email, please press resend email verification."),
           TextButton(
               onPressed: () async {
-                final user = AuthService.firebase().currentUser;
                 await AuthService.firebase().sendEmailVerification();
               },
               child: const Text('Resend email verififcation')),

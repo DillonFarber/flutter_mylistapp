@@ -1,11 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
+// import 'dart:developer' as devtools show log;
 import 'package:mylistapp/constants/routes.dart';
 import 'package:mylistapp/services/auth/auth_exceptions.dart';
 import 'package:mylistapp/services/auth/auth_service.dart';
 import 'package:mylistapp/utilities/show_error_log.dart';
-import 'package:mylistapp/views/verify_email_view.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -64,7 +63,6 @@ class _RegisterViewState extends State<RegisterView> {
                   email: email,
                   password: password,
                 );
-                final user = AuthService.firebase().currentUser;
                 AuthService.firebase().sendEmailVerification();
                 Navigator.of(context).pushNamed(verifyEmailRoute);
               } on WeakPasswordAuthException {

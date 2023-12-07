@@ -2,7 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-// import 'dart:developer' as devtools show log;
+import 'dart:developer' as devtools show log;
 import 'package:mylistapp/constants/routes.dart';
 import 'package:mylistapp/services/auth/auth_exceptions.dart';
 import 'package:mylistapp/services/auth/auth_service.dart';
@@ -118,6 +118,8 @@ class _LoginViewState extends State<LoginView> {
                               (route) => false,
                             );
                           }
+                        } on FirebaseAuthException catch (e) {
+                          devtools.log(e.code.toString());
                         } on UserNotFoundAuthException {
                           await showErrorDialog(
                             context,
@@ -129,9 +131,10 @@ class _LoginViewState extends State<LoginView> {
                             'Wrong Credentials',
                           );
                         } on GenericAuthException {
+                          devtools.log('generic auth exception login');
                           await showErrorDialog(
                             context,
-                            'Authentication Error',
+                            'Authentication Error login failed',
                           );
                         }
                       },
