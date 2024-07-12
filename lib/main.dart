@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mylistapp/Theme/my_theme.dart';
 import 'package:mylistapp/constants/routes.dart';
 import 'package:mylistapp/views/dashboard_view.dart';
+import 'package:mylistapp/views/game_card_view.dart';
+import 'package:mylistapp/views/games_view.dart';
+import 'package:mylistapp/views/lists_view.dart';
 import 'package:mylistapp/views/login_view.dart';
+import 'package:mylistapp/views/prototype_view.dart';
 import 'package:mylistapp/views/register_view.dart';
 import 'package:mylistapp/views/verify_email_view.dart';
 import 'package:mylistapp/services/auth/auth_service.dart';
@@ -11,16 +16,23 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
     title: 'Flutter Demo',
-    theme: ThemeData(
-      colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      useMaterial3: true,
-    ),
+    theme: MyAppTheme.getMyAppTheme(),
     home: const HomePage(),
     routes: {
       loginRoute: (context) => const LoginView(),
       registerRoute: (context) => const RegisterView(),
       dashboardRoute: (context) => const DashboardView(),
       verifyEmailRoute: (context) => const VerifyEmailView(),
+      prototypeRoute: (context) => const PrototypeView(),
+      listsRoute: (context) => const ListsView(),
+      gamesRoute: (context) => const GamesView(),
+      favoritesRoute: (context) => const ListsView(),
+      booksRoute: (context) => const ListsView(),
+      moviesShowsRoute: (context) => const ListsView(),
+      animeRoute: (context) => const ListsView(),
+      newsRoute: (context) => const ListsView(),
+      searchRoute: (context) => const ListsView(),
+      gameCardRoute: (context) => const GameCardView(),
     },
   ));
 }

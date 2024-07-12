@@ -16,7 +16,7 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  late final TextEditingController _email; //
+  late final TextEditingController _email;
   late final TextEditingController _password;
 
   @override
@@ -37,8 +37,11 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
-        backgroundColor: Colors.blue,
+        title: const Text(
+          'Login',
+          style: TextStyle(color: Colors.white60),
+        ),
+        backgroundColor: Colors.black87,
       ),
       body: Container(
         padding: const EdgeInsets.all(15),
@@ -47,7 +50,7 @@ class _LoginViewState extends State<LoginView> {
             padding: const EdgeInsets.all(15),
             height: 200,
             decoration: const BoxDecoration(
-              color: Colors.blue,
+              color: Colors.black87,
               borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
             child: Column(
